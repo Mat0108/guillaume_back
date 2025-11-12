@@ -14,16 +14,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 // Configuration des options CORS en fonction de l'environnement
+
+const allowedOrigins = [
+  /\.netlify\.live$/,      // toutes les URLs se terminant par .netlify.live
+  'https://matthieubarnabe.fr'
+];
+
 var corsOptionsProd = {
-  origin: process.env.PROD_URL,
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // pour les requêtes depuis Postman ou curl
+    if(allowedOrigins.some(o => o instanceof RegExp ? o.test(origin) : o === origin)){
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200
+};
+
+
 var corsOptionsDev = {
   origin: process.env.DEV_URL,
   optionsSuccessStatus: 200
 }
 var corsOptions = process.env.ENV_TYPE == "prod" ? corsOptionsProd : process.env.ENV_TYPE == "dev" ? corsOptionsDev : null
-console.log('corsOptions : ', corsOptions)
+
 app.use(cors(corsOptions));
 
 // Connexion à la base de données MongoDB via Mongoose
