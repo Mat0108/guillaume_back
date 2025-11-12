@@ -27,6 +27,7 @@ services:
      - 27017:27017
     volumes:
       - mongo-data:/data/db
+    command: mongod --bind_ip_all
     networks: 
       - server
 volumes:
