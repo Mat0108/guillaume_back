@@ -1,0 +1,42 @@
+
+services:
+  server:
+    container_name: server
+    depends_on:
+      - mongodb
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - $NODE_PORT:$NODE_PORT
+    # variable d'environment pour permettre de confirgurer l'acces du server à mongo
+    environment:
+        - MONGODB_URL=mongodb://mongodb:27017/guillaume
+        - ENV_TYPE=dev
+        - DEV_URL=http://localhost:5173
+    stdin_open: true
+    tty: true
+    cap_drop:
+      - ALL
+    command: ["nodemon", "--legacy-watch", "server.js"]
+    networks:
+      - server
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+    networks: 
+      - server
+volumes:
+  mongo-data:
+
+networks:
+  server:
+    driver: bridge

@@ -1,0 +1,26 @@
+{
+  "name": "guillaume-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "keywords": [
+    "nodejs",
+    "express",
+    "rest",
+    "api",
+    "mongodb"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.3",
+    "moment": "^2.30.1",
+    "mongoose": "^5.8.10",
+    "multer": "^2.0.2",
+    "sharp": "^0.34.4",
+    "swagger-jsdoc": "^6.2.7",
+    "swagger-ui-express": "^4.6.0"
+  }
+}

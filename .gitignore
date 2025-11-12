@@ -29,3 +29,5 @@ yarn-error.log*
 .netlify
 
 localhost+2*
+
+mongo-data/

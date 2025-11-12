@@ -1,0 +1,37 @@
+
+services:
+  server:
+    container_name: server
+    # depends_on:
+    #   - mongodb
+    #on build le server avec le dockerfile du dossier server
+    build: ./
+    restart: always
+    env_file: .env
+    ports:
+      - $NODE_PORT:$NODE_PORT
+      - 587:587
+    # variable d'environment pour permettre de confirgurer l'acces du server à mongo
+    environment:
+        - MONGODB_URL=mongodb://mongo:27017/guillaume
+    stdin_open: true
+    tty: true
+    cap_drop:
+      - ALL
+    networks:
+      - server
+
+  mongo:
+    image: mongo
+    ports:
+     - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    networks: 
+      - server
+volumes:
+  mongo-data:
+
+networks:
+  server:
+    driver: bridge
