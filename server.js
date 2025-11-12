@@ -60,14 +60,15 @@ app.get("/", (req, res) => {
 });
 
 // Configuration du port d'écoute du serveur
-const options = {
-  key: fs.readFileSync(path.join(__dirname, "localhost+2-key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "localhost+2.pem")),
-};
+// const options = {
+//   key: fs.readFileSync(path.join(__dirname, "localhost+2-key.pem")),
+//   cert: fs.readFileSync(path.join(__dirname, "localhost+2.pem")),
+// };
 
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
-https.createServer(options, app).listen(PORT, () => {
-  console.log("✅ Serveur HTTPS en route sur https://localhost:8080");
-});
+// https.createServer(options, app).listen(PORT, () => {
+//   console.log("✅ Serveur HTTPS en route sur https://localhost:8080");
+// });
+app.listen(PORT)
 
 module.exports= app
