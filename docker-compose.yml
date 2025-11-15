@@ -12,13 +12,28 @@ services:
       - 8080:8080
     environment:
         - ENV_TYPE=prod
-        - NODE_PORT= 8080;
-        - MONGODB_URL=mongodb://mongo:27017/guillaume
+        - NODE_PORT= 8080
+        - MONGODB_URL=mongodb://admin:F8G3iKGT%408cASsGy@37.59.112.87:27017/guillaume?authSource=admin&authMechanism=SCRAM-SHA-256
 
     stdin_open: true
     tty: true
     cap_drop:
       - ALL
+    networks:
+      - server
+  caddy:
+    image: caddy:latest
+    container_name: caddy-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - server
     networks:
       - server
 
@@ -28,14 +43,18 @@ services:
      - 27017:27017
     volumes:
       - mongo-data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: guillaume
     command: mongod --bind_ip_all
     networks: 
       - server
 volumes:
   mongo-data:
+  caddy-data:
+  caddy-config:
 
 networks:
   server:

@@ -1,9 +1,12 @@
-db.createUser ({
-    user : `${process.env.MONGODB_USER}`,
-    pwd : `${process.env.MONGODB_USER}`,
-    roles : [{
-        role : "readWrite", db : `${process.env.MONGODB_DATABASE}`
-    }]
+
+db = db.getSiblingDB('guillaume'); // crée/accède à la base "guillaume"
+
+db.createUser({
+  user: 'admin',
+  pwd: 'F8G3iKGT@8cASsGy',
+  roles: [
+    { role: 'readWrite', db: 'guillaume' }
+  ]
 });
 
-db.auth(`${process.env.MONGODB_USER}`, `${process.env.MONGODB_PASSWORD}`);
+print('✅ Utilisateur admin créé sur la base guillaume');
