@@ -6,5 +6,6 @@ module.exports = (server,corsConfig) => {
     server.post("/expo/getByTitle", cors(corsConfig),ExpoController.getExpo);
     server.post("/expo/create",cors(corsConfig),ExpoController.createExpo);
     server.post("/expo/addParagraphes",cors(corsConfig),ExpoController.addParagraphes);
-    
+    server.post("/expo/addOrder",cors(corsConfig),ExpoController.addOrder);
+
 }

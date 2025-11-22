@@ -50,3 +50,16 @@ exports.addParagraphes = (req,res) =>{
         }
     })
 }
+
+exports.addOrder = (req,res) => {
+   Expo.findOneAndUpdate({title:req.body.expotitle},{tableauxOrder:req.body.tableauxOrder},(error, expo) => {
+        if (error) {
+            res.status(401);
+            res.json({message:"Impossible de modifier l'expo"})
+        }
+        else {
+            res.status(200);
+            res.json({message:"L'expo a bien été mise a jour",expo});
+        }
+    })
+}
