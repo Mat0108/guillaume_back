@@ -17,7 +17,9 @@ app.use(express.static('public'));
 
 const allowedOrigins = [
   /\.netlify\.live$/,      // toutes les URLs se terminant par .netlify.live
-  'https://matthieubarnabe.fr'
+  'https://guillaumebarnabe.fr',
+  'http://localhost:5173',
+  /\.trycloudflare\.com$/
 ];
 
 var corsOptionsProd = {
@@ -75,15 +77,15 @@ app.get("/", (req, res) => {
 });
 
 // Configuration du port d'écoute du serveur
-// const options = {
-//   key: fs.readFileSync(path.join(__dirname, "localhost+2-key.pem")),
-//   cert: fs.readFileSync(path.join(__dirname, "localhost+2.pem")),
-// };
+/*const options = {
+   key: fs.readFileSync("cert.key"),
+   cert: fs.readFileSync("cert.crt"),
+ };
 
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
-// https.createServer(options, app).listen(PORT, () => {
-//   console.log("✅ Serveur HTTPS en route sur https://localhost:8080");
-// });
-app.listen(PORT)
-
+https.createServer(options, app).listen(PORT, () => {
+   console.log("✅ Serveur HTTPS en route sur https://localhost:8080");
+});*/
+const PORT =  8080
+app.listen(PORT, () => console.log(`✅ Node HTTP sur ${PORT}`));
 module.exports= app

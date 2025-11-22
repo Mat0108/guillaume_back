@@ -1,0 +1,3 @@
+api.guillaumebarnabe.fr {
+    reverse_proxy server:8080
+}
