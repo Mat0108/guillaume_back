@@ -2,7 +2,7 @@ const Expo = require("../models/ExpoModel");
 const Tableau = require("../models/TableauModel");
 
 exports.getAllExpo = (req,res) =>{
-    Expo.find({}).populate({path: 'tableauAffiche',populate: {path: 'imageBase64',model: 'imageBase64'}}).exec((error, expos) => {
+    Expo.find({}).exec((error, expos) => {
         if (error) {
             res.status(401);
             res.json({message:"Impossible de récuperer les expos"})
@@ -14,7 +14,7 @@ exports.getAllExpo = (req,res) =>{
     })
 }
 exports.getExpo=(req,res)=>{
-    Expo.findOne({title:req.body.expotitle}).populate('tableauAffiche').populate("imageBase64").exec((error,expo)=>{
+    Expo.findOne({title:req.body.expotitle}).exec((error,expo)=>{
         if(error){
             res.status(401);
             res.json({message:"Impossible de récuperer l'expo"})
@@ -25,8 +25,7 @@ exports.getExpo=(req,res)=>{
     })
 }
 exports.createExpo= async (req,res)=>{
-    let tableau = await Tableau.findById(req.body.tableauAffiche)
-    let newExpo = new Expo({...req.body,tableauAffiche:tableau._id});
+    let newExpo = new Expo({...req.body});
     newExpo.save((error, expo) => {
         if (error) {
             res.status(401);
