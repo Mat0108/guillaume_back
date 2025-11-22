@@ -16,10 +16,10 @@ app.use(express.static('public'));
 // Configuration des options CORS en fonction de l'environnement
 
 const allowedOrigins = [
-  /\.netlify\.live$/,      // toutes les URLs se terminant par .netlify.live
+  /\.netlify\.app$/,     
+  /\.netlify\.live$/,     // toutes les URLs se terminant par .netlify.live
   'https://guillaumebarnabe.fr',
-  'http://localhost:5173',
-  /\.trycloudflare\.com$/
+  'http://localhost:5173'
 ];
 
 var corsOptionsProd = {
