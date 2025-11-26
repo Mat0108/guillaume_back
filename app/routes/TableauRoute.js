@@ -15,4 +15,7 @@ module.exports = (server,corsConfig) => {
     
     server.post("/tableau/addExpo/:tableauid",cors(corsConfig),TableauController.addExpo)
     server.post("/tableau/counts",cors(corsConfig),TableauController.counts)
+
+    server.post("/tableau/:tableauId",cors(corsConfig),TableauController.updateTableau)
+    
 }

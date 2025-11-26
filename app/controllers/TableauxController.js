@@ -211,3 +211,16 @@ exports.counts = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.updateTableau = (req,res) => {
+   Tableau.findByIdAndUpdate(req.params.tableauId,req.body).populate("imageBase64").exec((error,tableau)=>{
+        if (error) {
+            res.status(401);
+            res.json({message:"Impossible de récupérer les images du tableau"})
+        }
+        else {
+            res.status(200);
+            res.json(tableau);
+        }
+  })
+}
