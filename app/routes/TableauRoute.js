@@ -9,8 +9,7 @@ module.exports = (server,corsConfig) => {
     server.post("/tableau/create",cors(corsConfig),TableauController.createTableau);
 
     const upload = multer({ storage: multer.memoryStorage() });
-    server.post("/tableau/addImage/",upload.single("file"),TableauController.addImage)
-    server.post("/tableau/addMultipleImage/",upload.array("files",10),TableauController.addMultipleImage)
+    server.post("/tableau/addMultipleImage/",upload.array("files",10),cors(corsConfig),TableauController.addMultipleImage)
     server.get("/tableau/getImage/:tableauid",cors(corsConfig),TableauController.getImage)
     
     server.post("/tableau/addExpo/:tableauid",cors(corsConfig),TableauController.addExpo)

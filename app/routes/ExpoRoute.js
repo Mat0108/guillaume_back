@@ -8,5 +8,5 @@ module.exports = (server,corsConfig) => {
     server.post("/expo/addParagraphes",cors(corsConfig),ExpoController.addParagraphes);
     server.post("/expo/addOrder",cors(corsConfig),ExpoController.addOrder);
     server.post("/expo/:expoId/update",cors(corsConfig),ExpoController.updateExpo);
-
+    server.post("/expo/:expoId/updateAffiche",upload.single("file"),cors(corsConfig),ExpoController.updateAffiche)
 }

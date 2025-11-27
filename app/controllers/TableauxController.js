@@ -78,33 +78,6 @@ function removeExtension(filename) {
   return filename.replace(/\.[^/.]+$/, ""); // enlève tout après le dernier point
 }
 
-
-exports.addImage = async (req,res)=>{
-    if(!req.file){return res.status(404).send("Tableau non trouvé");}
-    const { originalname, buffer, mimetype } = req.file;
-    const tableau = await Tableau.findById(removeExtension(originalname));
-    if (!tableau) return res.status(404).send("Tableau non trouvé");
-
-    // 🔹 Version originale limitée à ~12 Mo (compression légère)
-    const fullBuffer = await sharp(buffer)
-        .jpeg({ quality: 95 }) // compresse légèrement sans perte visible
-        .toBuffer();
-
-    if (fullBuffer.length > 12 * 1024 * 1024)
-        return res.status(400).send("Image trop lourde (>12 Mo)");
-
-
-    const previewBuffer = await sharp(buffer)
-        .resize({ width: 1920 }) // hauteur automatique
-        .toBuffer();
-        // .jpeg({ quality: 100 })
-
-    tableau.imageBase64Full = `data:${mimetype};base64,${fullBuffer.toString("base64")}`;
-    tableau.imageBase64 = `data:${mimetype};base64,${previewBuffer.toString("base64")}`;
-
-    await tableau.save();
-    res.json({ message: "Image enregistrée", id: tableau._id });
-}
 exports.addMultipleImage = async (req,res) => {
      try {
     if (!req.files?.length) {

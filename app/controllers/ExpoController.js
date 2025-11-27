@@ -75,3 +75,26 @@ exports.updateExpo = (req,res) => {
         }
     })
 }
+
+exports.updateAffiche = async (req,res) => {
+    const { originalname, buffer, mimetype } = req.body.file;
+
+   
+    // Génération version réduite
+    const previewbuffer = await sharp(buffer)
+        .rotate() // corrige les métadonnées EXIF
+        .resize({ width: 1920, withoutEnlargement: true })
+        .toFormat('jpeg', { quality: 90 }) // ✅ compatible tous formats
+        .toBuffer();
+    Expo.findByIdAndUpdate({_id:req.params.expoId},{tableauAffiche:`data:image/jpeg;base64,${previewbuffer.toString("base64")}`,tableauAfficheRatio:req.body.tableauAfficheRatio},(error, expo) => {
+        if (error) {
+            res.status(401);
+            res.json({message:"Impossible de modifier l'expo"})
+        }
+        else {
+            res.status(200);
+            res.json({message:"L'expo a bien été mise a jour",expo});
+        }
+    })
+
+}
