@@ -1,3 +1,4 @@
+const multer = require("multer")
 module.exports = (server,corsConfig) => {
     const ExpoController = require("../controllers/ExpoController");
     const cors = require('cors');
@@ -8,5 +9,7 @@ module.exports = (server,corsConfig) => {
     server.post("/expo/addParagraphes",cors(corsConfig),ExpoController.addParagraphes);
     server.post("/expo/addOrder",cors(corsConfig),ExpoController.addOrder);
     server.post("/expo/:expoId/update",cors(corsConfig),ExpoController.updateExpo);
+    
+    const upload = multer({ storage: multer.memoryStorage() });
     server.post("/expo/:expoId/updateAffiche",upload.single("file"),cors(corsConfig),ExpoController.updateAffiche)
 }

@@ -1,6 +1,6 @@
 const Expo = require("../models/ExpoModel");
-const Tableau = require("../models/TableauModel");
 
+const sharp = require("sharp");
 exports.getAllExpo = (req,res) =>{
     Expo.find({}).exec((error, expos) => {
         if (error) {
