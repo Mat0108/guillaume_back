@@ -15,6 +15,8 @@ module.exports = (server,corsConfig) => {
     server.post("/tableau/addExpo/:tableauid",cors(corsConfig),TableauController.addExpo)
     server.post("/tableau/counts",cors(corsConfig),TableauController.counts)
 
-    server.post("/tableau/:tableauId",cors(corsConfig),TableauController.updateTableau)
-    
+    server.post("/tableau/:tableauId/update",cors(corsConfig),TableauController.updateTableau)
+    server.post("/tableau/:tableauId/rotate",cors(corsConfig),TableauController.rotateTableau)
+    server.post("/tableau/:tableauId/updateTableau",upload.single("file"),cors(corsConfig),TableauController.updateTableauImage)
+   
 }

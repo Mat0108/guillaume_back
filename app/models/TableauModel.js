@@ -8,6 +8,7 @@ let tableauSchema = new Schema({
     titre: { type: String},
     technique: { type: String},
     prix:{ type: String},
+    date:{ type: String},
     expos:[{ type: String}],
     imageBase64: {type: Schema.Types.String, ref: "imageBase64"},
    

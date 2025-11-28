@@ -77,7 +77,7 @@ exports.updateExpo = (req,res) => {
 }
 
 exports.updateAffiche = async (req,res) => {
-    const { originalname, buffer, mimetype } = req.body.file;
+    const { buffer } = req.file;
 
    
     // Génération version réduite

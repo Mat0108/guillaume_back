@@ -7,8 +7,7 @@ exports.getAllTableaux = async (req,res)=>{
       const [tableaux, total] = await Promise.all([
         Tableau.find().populate("imageBase64")
           .skip((page - 1) * limit)
-          .limit(limit)
-          .select("-imageBase64Full"),
+          .limit(limit),
         Tableau.countDocuments(),
       ]);
 
@@ -25,7 +24,7 @@ exports.getAllTableaux = async (req,res)=>{
 }
 
 exports.getTableauById = (req,res) =>{
-    Tableau.findById({_id:req.params.tableauid},(error, tableau) => {
+    Tableau.findById({_id:req.params.tableauid}).populate("imageBase64").exec((error, tableau) => {
         if (error) {
             res.status(401);
             res.json({message:"Impossible de récupérer le tableau"})
@@ -197,3 +196,46 @@ exports.updateTableau = (req,res) => {
         }
   })
 }
+
+exports.rotateTableau = (req,res) => {
+  imageBase64.findById(`${req.params.tableauId}-image`).exec(async (error,image)=>{
+        if (error) {
+            res.status(401);
+            res.json({message:"Impossible de récupérer les images du tableau"})
+        }
+        else {
+          const rotatedBuffer = await sharp(Buffer.from(image.imageBase64.replace(/^data:.+;base64,/, ""),"base64")).rotate(req.body.angle ?? 90).toBuffer();
+          imageBase64.findByIdAndUpdate(`${req.params.tableauId}-image`,{imageBase64:`data:image/jpeg;base64,${rotatedBuffer.toString("base64")}`}).exec((error,image)=>{
+        if (error) {
+            res.status(401);
+            res.json({message:"Impossible de récupérer les images du tableau"})
+        }
+        else {
+            res.status(200);
+            res.json({imageBase64:`data:image/jpeg;base64,${rotatedBuffer.toString("base64")}`});
+        }
+  })
+        }
+  })
+}
+exports.updateTableauImage = async (req,res) => {
+  const {originalname, buffer } = req.file;
+
+        
+        // Génération version réduite
+  const previewBuffer = await sharp(buffer)
+    .rotate() // corrige les métadonnées EXIF
+    .resize({ width: 1920, withoutEnlargement: true })
+    .toFormat('jpeg', { quality: 90 }) // ✅ compatible tous formats
+    .toBuffer();
+    imageBase64.findByIdAndUpdate(`${req.params.tableauId}-image`,{imageBase64:`data:image/jpeg;base64,${previewBuffer.toString("base64")}`},(error,image)=>{
+      if (error) {
+          res.status(401);
+          res.json({message:"Impossible de récupérer les images du tableau"})
+      }
+      else {
+          res.status(200);
+          res.json(image)
+      }})
+}
+

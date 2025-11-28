@@ -11,5 +11,5 @@ module.exports = (server,corsConfig) => {
     server.post("/expo/:expoId/update",cors(corsConfig),ExpoController.updateExpo);
     
     const upload = multer({ storage: multer.memoryStorage() });
-    server.post("/expo/:expoId/updateAffiche",upload.single("file"),cors(corsConfig),ExpoController.updateAffiche)
+    server.post("/expo/:expoId/updateAffiche",upload.single("file"),ExpoController.updateAffiche)
 }
