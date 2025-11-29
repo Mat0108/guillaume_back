@@ -6,7 +6,7 @@ module.exports = (server,corsConfig) => {
     server.post("/tableau/getAll", cors(corsConfig), TableauController.getAllTableaux);
     server.get("/tableau/getById/:tableauId", cors(corsConfig),TableauController.getTableauById);
     server.post("/tableau/getByExpo",cors(corsConfig),TableauController.getTableauxByExpo)
-    server.post("/tableau/create",cors(corsConfig),TableauController.createTableau);
+    server.post("/tableau/create",upload.single("file"),cors(corsConfig),TableauController.createTableau);
 
     const upload = multer({ storage: multer.memoryStorage() });
     server.post("/tableau/addMultipleImage/",upload.array("files",10),cors(corsConfig),TableauController.addMultipleImage)
