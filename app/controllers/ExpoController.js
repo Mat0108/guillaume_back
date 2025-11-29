@@ -14,7 +14,7 @@ exports.getAllExpo = (req,res) =>{
     })
 }
 exports.getExpo=(req,res)=>{
-    Expo.findOne({title:req.body.expotitle}).exec((error,expo)=>{
+    Expo.findById({_id:req.params.expoId}).exec((error,expo)=>{
         if(error){
             res.status(401);
             res.json({message:"Impossible de récuperer l'expo"})
@@ -38,7 +38,7 @@ exports.createExpo= async (req,res)=>{
     })
 }
 exports.addParagraphes = (req,res) =>{
-    Expo.findOneAndUpdate({title:req.body.expotitle},{paragraphes:req.body.paragraphes},(error, expo) => {
+    Expo.findByIdAndUpdate({_id:req.params.expoId},{paragraphes:req.body.paragraphes},(error, expo) => {
         if (error) {
             res.status(401);
             res.json({message:"Impossible de modifier l'expo"})
@@ -51,7 +51,7 @@ exports.addParagraphes = (req,res) =>{
 }
 
 exports.addOrder = (req,res) => {
-   Expo.findOneAndUpdate({title:req.body.expotitle},{tableauxOrder:req.body.tableauxOrder},(error, expo) => {
+   Expo.findOneAndUpdate({_id:req.params.expoId},{tableauxOrder:req.body.tableauxOrder},(error, expo) => {
         if (error) {
             res.status(401);
             res.json({message:"Impossible de modifier l'expo"})

@@ -24,7 +24,7 @@ exports.getAllTableaux = async (req,res)=>{
 }
 
 exports.getTableauById = (req,res) =>{
-    Tableau.findById({_id:req.params.tableauid}).populate("imageBase64").exec((error, tableau) => {
+    Tableau.findById({_id:req.params.tableauId}).populate("imageBase64").exec((error, tableau) => {
         if (error) {
             res.status(401);
             res.json({message:"Impossible de récupérer le tableau"})
@@ -38,14 +38,13 @@ exports.getTableauById = (req,res) =>{
 
 
 exports.getTableauxByExpo = async (req, res) => {
-    const { expo, page = 1, limit = 10 } = req.body;
+    const { expoId, page = 1, limit = 10 } = req.body;
     try {
       const [tableaux, total] = await Promise.all([
-        Tableau.find({ expos: expo }).populate("imageBase64")
+        Tableau.find({ expos: expoId }).populate("imageBase64")
           .skip((page - 1) * limit)
-          .limit(limit)
-          .select("-imageBase64Full"),
-        Tableau.countDocuments({ expos: expo }),
+          .limit(limit),
+        Tableau.countDocuments({ expos: expoId }),
       ]);
 
       res.status(200).json({
@@ -65,7 +64,7 @@ exports.createTableau = (req,res) => {
     newTableau.save((error, tableau) => {
         if (error) {
             res.status(401);
-            res.json({message:"Impossible de créer un blog"})
+            res.json({message:"Impossible de créer un tableau"})
         }
         else {
             res.status(200);
@@ -86,19 +85,17 @@ exports.addMultipleImage = async (req,res) => {
     const results = [];
 
     for (const file of req.files) {
-        const { originalname, buffer, mimetype } = file;
-
-        console.log('File reçu :', originalname, mimetype, buffer.length);
+        const { originalName, buffer, mimetype } = file;
 
         // Génération version réduite
         const previewBuffer = await sharp(buffer)
-          .rotate() // corrige les métadonnées EXIF
+          .rotate() 
           .resize({ width: 1920, withoutEnlargement: true })
           .toFormat('jpeg', { quality: 90 }) // ✅ compatible tous formats
           .toBuffer();
 
         // Sauvegarde image réduite
-        const imageId = `${removeExtension(originalname)}-image`;
+        const imageId = `${removeExtension(originalName)}-image`;
 
         const image = await imageBase64.findByIdAndUpdate(
           imageId,
@@ -111,9 +108,9 @@ exports.addMultipleImage = async (req,res) => {
 
         // Lien vers le tableau correspondant
         const tableau = await Tableau.findByIdAndUpdate(
-          removeExtension(originalname),
+          removeExtension(originalName),
           {
-            _id: removeExtension(originalname),
+            _id: removeExtension(originalName),
             imageBase64: image._id,
           },
           { upsert: true, new: true }
@@ -137,7 +134,7 @@ exports.addMultipleImage = async (req,res) => {
   }
 
 exports.getImage = (req,res) => {
-  Tableau.findById(req.params.tableauid).populate("imageBase64").select("imageBase64").exec((error,tableau)=>{
+  Tableau.findById(req.params.tableauId).populate("imageBase64").select("imageBase64").exec((error,tableau)=>{
         if (error) {
             res.status(401);
             res.json({message:"Impossible de récupérer les images du tableau"})
@@ -151,13 +148,13 @@ exports.getImage = (req,res) => {
 
 exports.addExpo = async(req,res)=>{
 
-    if (!req.params.tableauid || !req.body.expo) {
+    if (!req.params.tableauId || !req.body.expo) {
     return res.status(400).json({ message: "tableauId et expo sont requis" });
   }
 
   try {
     const tableau = await Tableau.findByIdAndUpdate(
-      req.params.tableauid,
+      req.params.tableauId,
       { $addToSet: { expos: req.body.expo } }, // ajoute expo seulement si pas déjà présent
       { new: true } // renvoie le document mis à jour
     );
@@ -175,8 +172,8 @@ exports.addExpo = async(req,res)=>{
 
 exports.counts = async (req, res) => {
     try {
-        const count = await (req.body.expo 
-            ? Tableau.countDocuments({ expos: req.body.expo }) 
+        const count = await (req.body.expoId 
+            ? Tableau.countDocuments({ expos: req.body.expoId }) 
             : Tableau.countDocuments());
         res.status(200).json({ total: count });
     } catch (err) {
@@ -219,12 +216,12 @@ exports.rotateTableau = (req,res) => {
   })
 }
 exports.updateTableauImage = async (req,res) => {
-  const {originalname, buffer } = req.file;
+  const {originalName, buffer } = req.file;
 
         
         // Génération version réduite
   const previewBuffer = await sharp(buffer)
-    .rotate() // corrige les métadonnées EXIF
+    .rotate()
     .resize({ width: 1920, withoutEnlargement: true })
     .toFormat('jpeg', { quality: 90 }) // ✅ compatible tous formats
     .toBuffer();
