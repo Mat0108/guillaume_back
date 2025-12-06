@@ -67,8 +67,10 @@ connectWithRetry();
 // Import et configuration des routes de l'application
 const expoRoute = require("./app/routes/ExpoRoute");
 const tableauRoute = require("./app/routes/TableauRoute")
+const mailRoute = require("./app/routes/MailRoute")
 expoRoute(app, corsOptions);
 tableauRoute(app,corsOptions)
+mailRoute(app,corsOptions)
 
 
 app.get("/", (req, res) => {
