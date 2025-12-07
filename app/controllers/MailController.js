@@ -36,7 +36,7 @@ exports.sendMail = async (req, res) => {
 }
 
 exports.getMessages = async (req,res)=>{
-  Message.find({},(messages,error)=>{
+  Message.find().exec((error,messages)=>{
      if (error){
         res.json({message: "Impossible de récupérer les messages"});
         res.status(400);
@@ -46,8 +46,9 @@ exports.getMessages = async (req,res)=>{
   })
 }
 exports.createMessage = async (req,res)=>{
-  let newMassage = new Message(req.body)
-  newMassage.save((message,error)=>{
+  let newMassage = new Message({...req.body,date:new Date()})
+
+  newMassage.save((error,message)=>{
      if (error){
         res.json({message: "Impossible de créer un message"});
         res.status(400);
