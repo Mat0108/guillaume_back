@@ -60,23 +60,22 @@ exports.getTableauxByExpo = async (req, res) => {
 };
 
 exports.createTableau = (req,res) => {
-    
-    let newTableau = new Tableau({
-      titre:req.body.titre,
-      dim_oeuvre:req.body.dim_oeuvre,
-      dim_cadre:req.body.dim_cadre,
-      technique: req.body.technique,
-      prix: req.body.prix,
-      date: req.body.date,
-      expos: req.body.expos});
+    let newTableau = new Tableau(JSON.parse(req.body.tableau));
     newTableau.save(async (error, tableau) => {
         if (error) {
             res.status(401);
             res.json({message:"Impossible de créer un tableau"})
         }
         else {
-            res.status(200);
-            let newImage = new imageBase64({_id:`${tableau._id}-image`,imageBase64: `data:image/jpeg;base64,${previewBuffer.toString("base64")}`}) 
+           const { originalName, buffer, mimetype } = req.file;
+
+          const previewBuffer = await sharp(buffer)
+            .rotate() 
+            .resize({ width: 1920, withoutEnlargement: true })
+            .toFormat('jpeg', { quality: 90 }) // ✅ compatible tous formats
+            .toBuffer();  
+          console.log('tableau._id : ', tableau._id)
+          let newImage = new imageBase64({_id:`${tableau._id}-image`,imageBase64: `data:image/jpeg;base64,${previewBuffer.toString("base64")}`}) 
             newImage.save((error,image)=>{
               if(error){                
                 res.status(401);

@@ -5,7 +5,9 @@ let ExpoSchema = new Schema({
     title:{type: String},
     paragraphes:[{type: String}],
     tableauAffiche: {type: Schema.Types.String, ref: "Tableau"},
-    tableauxOrder: [{type: String}]
+    tableauxOrder: [{type: String}],
+    lieu: {type: String},
+    date: {type: String}
 
    
 });
