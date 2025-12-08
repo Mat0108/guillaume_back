@@ -45,7 +45,7 @@ exports.getMessages = async (req,res)=>{
     };
   })
 }
-exports.createMessage = async (req,res)=>{
+exports.createMessage = (req,res)=>{
   let newMassage = new Message({...req.body,date:new Date()})
 
   newMassage.save((error,message)=>{
@@ -56,4 +56,29 @@ exports.createMessage = async (req,res)=>{
         res.status(200).json(message)
     };
   })
+}
+exports.updateMessage = (req,res)=>{
+  Message.findByIdAndUpdate(req.params.messageId,req.body,(error,message)=>{
+     if (error){
+        res.json({message: "Impossible de mettre à jour le message"});
+        res.status(400);
+    }else{
+        res.status(200).json(message)
+    }})
+}
+exports.deleteMessage = (req,res)=>{
+    Message.findByIdAndRemove(req.params.messageId,(error,message)=>{
+     if (error){
+        res.json({message: "Impossible de supprimer le message"});
+        res.status(400);
+    }else{
+      Message.find().exec((error,messages)=>{
+        if (error){
+            res.json({message: "Impossible de récupérer les messages"});
+            res.status(400);
+        }else{
+            res.status(200).json(messages)
+        };
+      })
+    }})
 }

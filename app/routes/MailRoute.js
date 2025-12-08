@@ -6,5 +6,7 @@ module.exports = (server,corsConfig) => {
 
     server.post("/contact/send",cors(corsConfig),MailController.sendMail);
     server.get("/messages/",cors(corsConfig),MailController.getMessages);
-    server.post("/messages/create",cors(corsConfig),MailController.createMessage)
+    server.post("/messages/create",cors(corsConfig),MailController.createMessage);
+    server.post("/message/:messageId/update",cors(corsConfig),MailController.updateMessage);
+    server.delete("/message/:messageId/delete",cors(corsConfig),MailController.deleteMessage);
 }
