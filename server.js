@@ -45,7 +45,6 @@ app.use(cors(corsOptions));
 
 // Connexion à la base de données MongoDB via Mongoose
 const db = require("./app/models");
-console.log('db : ', db.url)
 async function connectWithRetry(maxRetries = 5, delay = 2000) {
   for (let i = 0; i < maxRetries; i++) {
     try {

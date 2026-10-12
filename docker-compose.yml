@@ -15,13 +15,12 @@ services:
         - ENV_TYPE=prod
         - NODE_PORT= 8080
         - MONGODB_URL=mongodb://admin:F8G3iKGT%408cASsGy@37.59.112.87:27017/guillaume?authSource=admin&authMechanism=SCRAM-SHA-256
-
     stdin_open: true
     tty: true
     cap_drop:
       - ALL
     networks:
-      - server
+      - web
   caddy:
     image: caddy:latest
     container_name: caddy-proxy
@@ -36,12 +35,18 @@ services:
     depends_on:
       - server
     networks:
-      - server
+      - web
 
   mongo:
     image: mongo
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
-     - 27017:27017
+     -  27017:27017
     volumes:
       - mongo-data:/data/db
       - ./mongo-init:/docker-entrypoint-initdb.d
@@ -51,12 +56,12 @@ services:
       MONGO_INITDB_DATABASE: guillaume
     command: mongod --bind_ip_all
     networks: 
-      - server
+      - web
 volumes:
   mongo-data:
   caddy-data:
   caddy-config:
 
 networks:
-  server:
-    driver: bridge
+  web:
+    external: true

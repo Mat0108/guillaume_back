@@ -1,3 +1,8 @@
 api.guillaumebarnabe.fr {
+
+    handle_path /abatjour/* {
+        reverse_proxy serverabatjour:8082
+    }
+
     reverse_proxy server:8080
 }

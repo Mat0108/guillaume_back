@@ -20,6 +20,7 @@ exports.sendMail = async (req, res) => {
     transporter.sendMail({
     from: process.env.MAIL_NAME,
     to: email,
+    cc: process.env.MAIL_NAME,
     subject: "Nouveau message depuis le site",
     html: `
       <p><strong>Nom:</strong> ${name}</p>
